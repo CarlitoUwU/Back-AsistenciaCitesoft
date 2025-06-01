@@ -7,22 +7,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model tb_asistencia {
-  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  usuario_id  String      @db.Uuid
-  weekday     weekday
-  hora_init   DateTime    @default(now()) @db.Time(6)
-  hora_fin    DateTime?   @db.Time(6)
-  tb_usuarios tb_usuarios @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "constraint_1")
+model Attendance {
+  id         String    @id(map: "tb_asistencia_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuario_id String    @db.Uuid
+  weekday    weekday
+  hora_init  DateTime  @default(now()) @db.Time(6)
+  hora_fin   DateTime? @db.Time(6)
+  User       User      @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "constraint_1")
 }
 
-model tb_usuarios {
-  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  first_name    String?         @db.VarChar
-  last_name     String?         @db.VarChar
-  is_active     Boolean?
-  email         String?         @db.VarChar
-  tb_asistencia tb_asistencia[]
+model User {
+  id         String       @id(map: "tb_usuarios_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  first_name String?      @db.VarChar
+  last_name  String?      @db.VarChar
+  is_active  Boolean?
+  email      String?      @db.VarChar
+  role       role         @default(estudiante)
+  Attendance Attendance[]
 }
 
 enum Weekday {
@@ -43,4 +44,9 @@ enum weekday {
   FRIDAY
   SATURDAY
   SUNDAY
+}
+
+enum role {
+  admin
+  estudiante
 }
