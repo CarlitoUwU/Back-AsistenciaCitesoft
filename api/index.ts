@@ -1,4 +1,4 @@
-// api/index.ts
+import 'tsconfig-paths/register';
 import createServer from '@vendia/serverless-express';
 import { Handler } from 'aws-lambda';
 import { AppModule } from '../src/app/app.module';
